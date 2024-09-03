@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"time"
 )
@@ -486,12 +485,12 @@ func (s *Client) call(ctx context.Context, soapAction string, request, response 
 	client := s.opts.client
 	if client == nil {
 		tr := &http.Transport{
-			TLSClientConfig: s.opts.tlsCfg,
-			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-				d := net.Dialer{Timeout: s.opts.timeout}
-				return d.DialContext(ctx, network, addr)
-			},
-			TLSHandshakeTimeout: s.opts.tlshshaketimeout,
+			// TLSClientConfig: s.opts.tlsCfg,
+			// DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			// 	d := net.Dialer{Timeout: s.opts.timeout}
+			// 	return d.DialContext(ctx, network, addr)
+			// },
+			// TLSHandshakeTimeout: s.opts.tlshshaketimeout,
 		}
 		client = &http.Client{Timeout: s.opts.contimeout, Transport: tr}
 	}
@@ -526,7 +525,7 @@ func (s *Client) call(ctx context.Context, soapAction string, request, response 
 	}
 
 	var mmaBoundary string
-	if s.opts.mma{
+	if s.opts.mma {
 		mmaBoundary, err = getMmaHeader(res.Header.Get("Content-Type"))
 		if err != nil {
 			return err
